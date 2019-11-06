@@ -1,0 +1,35 @@
+#lang sicp
+
+(define (expmod base exp m)
+    (cond ((= exp 0) 1)
+          ((even? exp)
+            (remainder (square (expmod base (/ exp 2) m)) m)
+          )
+          (else 
+            (remainder (* base (expmod base (- exp 1) m)) m)
+          )
+    )
+)
+
+(define (check? a n)
+    (= (expmod a n n) a)
+)
+
+(define (test-iter a n)
+    (cond ((= a n) #t)
+          ((check? a n)
+            (test-iter (+ a 1) n)
+          )
+          (else #f)
+    )
+)
+(define (square x)
+    (* x x)
+)
+
+(test-iter 1 138)
+(test-iter 1 1105)
+(test-iter 1 1729)
+(test-iter 1 2465)
+(test-iter 1 2821)
+(test-iter 1 6601)
