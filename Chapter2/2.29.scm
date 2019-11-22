@@ -41,7 +41,7 @@ root
 
 
 ;总重量是左分支的重量+右分支的重量
-(define (total-weight mobile)
+(define (mobile-weight mobile)
     (+ (branch-weight (left-branch mobile))
        (branch-weight (right-branch mobile))
     )
@@ -50,7 +50,7 @@ root
 ;如果右边是structure那么，重量就是用total-weight计算，否则就是重量自身
 (define (branch-weight branch)
     (if (is_structure? branch)
-        (total-weight (branch-structure branch))
+        (mobile-weight (branch-structure branch))
         (branch-structure branch)
     )
 )
@@ -65,15 +65,34 @@ root
 活动体是否平衡，判断依据就是左右两个branch的：
 左length * 左weight == 右length * 右weight
 |#
-
 (define (branch-torque branch)
     (* (branch-length branch)
         (branch-weight branch)
     )
 )
 
+#|
+一个mobile是否平衡，需要左右两个branch的torque相同
+而且每个branch也平衡
+|#
+
 (define (mobile-balance? mobile)
-    (= (branch-torque (left-branch mobile)) (branch-torque (right-branch mobile)))
+    (and
+        (= (branch-torque (left-branch mobile)) (branch-torque (right-branch mobile)))
+        (branch-balance? (left-branch mobile))
+        (branch-balance? (right-branch mobile))
+    )
+)
+
+#|
+branch平衡，如果branch里不包含mobile，那么就平衡，如果包含mobile，还要检测mobile是否平衡
+|#
+
+(define (branch-balance? branch)
+    (if (is_structure? branch)
+        (mobile-balance? (branch-structure branch))
+        true
+    )
 )
 
 ; (branch-torque ml)
@@ -102,6 +121,6 @@ root
 
 (define root1 (make-mobile1 ml1 mr1))
 
-(total-weight root1)
-(mobile-balance? mrr1)
+(mobile-weight root1)
+; (mobile-balance? mrr1)
 (mobile-balance? root1)
