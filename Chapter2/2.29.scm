@@ -113,7 +113,7 @@ branch平衡，如果branch里不包含mobile，那么就平衡，如果包含mo
 )
 
 (define mrrl1 (make-branch1 5 4))
-(define mrrr1 (make-branch1 8 2))
+(define mrrr1 (make-branch1 10 2))
 (define mrr1 (make-mobile1 mrrl1 mrrr1))
 
 (define ml1 (make-branch1 4 9))
@@ -121,6 +121,20 @@ branch平衡，如果branch里不包含mobile，那么就平衡，如果包含mo
 
 (define root1 (make-mobile1 ml1 mr1))
 
-(mobile-weight root1)
+; (mobile-weight root1)
 ; (mobile-balance? mrr1)
-(mobile-balance? root1)
+; (mobile-balance? root1)
+
+(define (balance? mobile)
+    (let ((lb (left-branch mobile))
+          (rb (right-branch mobile))
+         )
+         (cond ((not (= (branch-torque lb) (branch-torque rb))) false)
+               ((is_structure? lb) (balance? (branch-structure lb)))
+               ((is_structure? rb) (balance? (branch-structure rb)))
+               (else true)
+         )
+    )
+)
+
+(balance? root1)
