@@ -34,7 +34,7 @@
     (if (= k 0)
         (list empty-board)
         (filter
-         safe? 
+         (lambda (positions) (safe? k positions))
          (flatmap
           (lambda (rest-of-queens)
             (map (lambda (new-row)
@@ -50,7 +50,7 @@
     (cons a c)
 )
 
-(define (safe? queen-position)
+(define (safe? k queen-position)
     (define (check-next? queen-pos positions row-move)
         (if (null? positions)
             #t
@@ -68,7 +68,7 @@
     (check-next? (car queen-position) (cdr queen-position) 1)
 )
 
-(queens 4)
+(queens 6)
 
 #|
 此题解法：
